@@ -3,6 +3,9 @@
 #include "led.h"
 #include "buzzer.h"
 #include "switches.h"
+#include "lcdutils.h"
+#include "lcddraw.h"
+
 
 static char dim_state = 0;
 
@@ -26,6 +29,7 @@ void state_advance(){
     red_on = 1;
     green_on = 0;
     kimPossible();
+    drawSquare(70,70);
     break;
   case 2:
     // greenLight();
