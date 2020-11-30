@@ -6,6 +6,16 @@
 
 static char dim_state = 0;
 
+void drawSquare(int offc, int offr){
+  for(int r = 0; r < 20; r++){
+    for (int c = 0; c < 20; c++){
+      drawPixel(c + offc, r + offr, COLOR_BLUE);
+}
+
+
+
+
+
 void state_advance(){
   switch(state){
   case 0:
