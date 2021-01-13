@@ -3,6 +3,10 @@
 #include "led.h"
 #include "buzzer.h"
 #include "StateMachine.h"
+#include <libTimer.h>
+#include "lcdutils.h"
+#include "lcddraw.h"
+
 
 char state;
 char SW1down;
@@ -11,7 +15,7 @@ char SW3down;
 char SW4down;
 char switch_state;
 char switch_state_changed;
-
+char button = 0;
 
 
 
@@ -36,14 +40,12 @@ void switch_init(){
 void switch_interrupt_handler(){
   char p2val = switch_update_interrupt_sense();
 
-  if(p2val & SW1 ? 0 : 1){
-    state = 1;
-  } else if(p2val & SW2 ? 0: 1){
-    state = 2;
-  }else if(p2val & SW3 ? 0: 1){
-    state = 3;
-  } else if(p2val & SW4 ? 0: 1){
-    state = 4;
+  char s1 = (p2val & SW1) ? 0:1;
+  char s2 = (p2val & SW2) ? 0:1;
+  char s3 = (p2val & SW3) ? 0:1;
+  char s4 = (p2val & SW4) ? 0:1;
+  
+  if(s1){
+    button = 1;
   }
-   state_advance();
 }

@@ -14,7 +14,8 @@ void drawSquare(int offc, int offr){
     for (int c = 0; c < 20; c++){
       drawPixel(c + offc, r + offr, COLOR_BLUE);
 }
-
+  }
+}
 
 
 
@@ -45,7 +46,7 @@ void state_advance(){
     state = 0;
     break;
   case 4:
-    dim();
+    //  dim();
     soundFour();
     state = 0;
     break;
