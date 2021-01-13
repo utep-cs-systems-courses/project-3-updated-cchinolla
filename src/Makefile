@@ -1,4 +1,4 @@
-COMMON_OBJECTS = 
+COMMON_OBJECTS = x
 
 CPU = msp430g2553
 CFLAGS = -mmcu=${CPU}  -I../h
@@ -10,10 +10,9 @@ AS = msp430-elf-as
 
 all: blinkMain.elf
 
-blinkMain.elf: ${x} blinkMain.o p2_interrupt_handler.o led.o switches.o buzzer.o StateMachine.o lib/libTimer.a
-
-	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^
+blinkMain.elf: ${x} blinkMain.o p2_interrupt_handler.o led.o switches.o buzzer.o StateMachine.o wdInterruptHandler.o
+	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^ -lTimer -lLcd
 load: blinkMain.elf
-	msp430loader.sh blinkMain.elf
+	msp430loader.sh $^
 clean:
 	rm -f *.o *.elf
