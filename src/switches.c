@@ -16,7 +16,7 @@ char SW4down;
 char switch_state;
 char switch_state_changed;
 char button = 0;
-
+short note;
 
 
 static char switch_update_interrupt_sense(){
@@ -46,6 +46,22 @@ void switch_interrupt_handler(){
   char s4 = (p2val & SW4) ? 0:1;
   
   if(s1){
+    switch_state = 1;
     button = 1;
+    note = 1000;
+    buzzer_set_period(note);
+  }else if(s2){
+    switch_state = 2;
+    button = 2;
+    note = 5000;
+    buzzer_set_period(note);
+  }else if(s3){
+    switch_state = 3;
+    button = 3;
+    note = 7000;
+    buzzer_set_period(note);
+  }else if(s4){
+    switch_state = 4;
+    button = 4;
   }
 }

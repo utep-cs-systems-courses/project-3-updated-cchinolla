@@ -17,94 +17,167 @@ void drawSquare(int offc, int offr){
   }
 }
 
+char toggle_green(){
+  static char s = 0;
+  switch(s){
+  case 0:
+    red_on = 1;
+    s = 1;
+    break;
+  case 1:
+    red_on = 0;
+    s = 0;
+    break;
+  }
+  return 1;
+}
 
+char toggle_red(){
+  static char s = 0;
+  switch(s){
+  case 0:
+    green_on = 1;
+    s = 1;
+    break;
+  case 1:
+    green_on = 0;
+    s = 0;
+    break;
+  }
+  return 1;
+}
+
+void buzzer_advance(){
+  static char sec_count = 0;
+  switch(sec_count){
+  case 0:
+    buzzer_set_period(1000);
+    sec_count = 1;
+    break;
+  case 1:
+    buzzer_set_period(5000);
+    sec_count = 2;
+    break;
+  case 2:
+    buzzer_set_period(3000);
+    sec_count = 3;
+    break;
+  case 3:
+    buzzer_set_period(7000);
+    sec_count = 0;
+    break;
+  }
+}
 
 
 void state_advance(){
+  char changed = 0;
   switch(state){
   case 0:
-     break;
+    changed = toggle_green();
+    break;
   case 1:
-    // redLight();
-    //    buzzer_set_period(1000);
-    red_on = 1;
-    green_on = 0;
-    kimPossible();
-    drawSquare(70,70);
+    changed = toggle_red();
     break;
   case 2:
-    // greenLight();
-    red_on = 0;
-    green_on = 1;
-    soundTwo();
-    break;
-  case 3:
-    //    bothLights();
-    red_on = 1;
-    green_on = 1;
-    soundThree();
-    state = 0;
-    break;
-  case 4:
-    //  dim();
-    soundFour();
-    state = 0;
+    changed = dim();
     break;
   }
-  led_changed = 1;
+  led_changed = changed;
   led_update();
 }
 
-//void dim(){
-//static int dim_counter = 0;
-// switch(dim_counter){
-//case 0:
-// dim25();
-// dim_counter = 1;
-// break;
-//case 1:
-// dim50();
-//  dim_counter = 2;
-//  break;
-//case 2:
-// dim75();
-// dim_counter = 0;
-// break;
-// }
-// return 1;
-//}
+char dim(){
+static int dim_counter = 0;
+switch(dim_counter){
+case 0:
+  red_on = 0;
+  led_changed = 1;
+  led_update();
+  dim_counter = 1;
+  break;
+case 1:
+  dim25();
+  dim_counter = 2;
+  break;
+case 2:
+  dim50();
+  dim_counter = 3;
+  break;
+case 3:
+  dim75();
+  dim_counter = 0;
+  break;
+}
+  return 1;
+}
 
 void dim25(){
-  switch(dim_state){
-  case 0: red_on = 1; break;
+  static char dimState = 0;
+  switch(dimState){
+  case 0:
+    red_on = 1;
+    dimState = 1;
+    break;
   case 1:
+    red_on = 0;
+    dimState = 2;
+    break;
   case 2:
-  case 3: red_on = 0; break;
-  default: dim_state = 0;
+    red_on = 1;
+    dimState = 3;
+    break;
+  case 3:
+    red_on = 0;
+    dimState = 0;
+    break;
   }
   led_changed = 1;
   led_update();
 }
 
 void dim50(){
-  switch(dim_state){
+  static char dimState = 0;
+  switch(dimState){
   case 0:
-  case 1: red_on = 1; break;
+    red_on = 1;
+    dimState = 1;
+    break;
+  case 1:
+    red_on = 0;
+    dimState = 2;
+    break;
   case 2:
-  case 3: red_on = 0; break;
-  default: dim_state = 0;
+    red_on = 1;
+    dimState = 3;
+    break;
+  case 3:
+    red_on = 1;
+    dimState = 0;
   }
   led_changed = 1;
   led_update();
 }
 
 void dim75(){
-  switch(dim_state){
-  case 0: red_on = 0; break;
+  static char dimState = 0;
+  switch(dimState){
+  case 0:
+    red_on = 1;
+    dimState = 1;
+    break;
   case 1:
+    red_on = 1;
+    dimState = 2;
+    break;
   case 2:
-  case 3: red_on = 1; break;
-  default: dim_state = 0;
+    red_on = 1;
+    dimState = 3;
+    break;
+  case 3:
+    red_on = 0;
+    dimState = 0;
+    break;
   }
   led_changed = 1;
   led_update();
