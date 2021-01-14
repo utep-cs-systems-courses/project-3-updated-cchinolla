@@ -9,7 +9,7 @@
 #include "StateMachine.h"
 
 
-
+//#define LED_GREEN BIT6
 short redrawScreen = 1;
 u_int fontFgColor = COLOR_BLUE;
 long COLOR1;
@@ -31,27 +31,82 @@ void wdt_c_handler(){
   if(switch_state == 1){
     if(++count % 5 == 0){
       buzzer_advance();
-      if(count == 125){
+      if(count == 250){
 	state_advance();
 	count = 0;
+	}
       }
     }
-  }
   if(++count2 == 250){
     state_advance();
     count2 = 0;
     count2++;
     redrawScreen = 1;
-  }
-  if(switch_state == 4){
+   }
+ if(switch_state == 4){
     if(++count3 == 250){
       count3 == 0;
       fontFgColor = (fontFgColor == COLOR_YELLOW ? COLOR_BROWN : COLOR_GREEN);
       redrawScreen = 1;
+      }
     }
   }
+
+
+/*extern char s;
+static char button = 0;
+
+void wdt_c_handler(){
+  static int count = 0;
+  // u_init state = p2sw_read();
+
+  count++;
+
+  if((state & 1) == 0){
+    button = 1;
+  }
+  if((state & 2) == 0){
+    button = 2;
+  }
+
+  if((state & 4) == 0){
+    button = 3;
+  }
+  if((state & 8) == 0){
+    button = 4;
+  }
+
+
+  switch(button){
+  case 1:
+    redrawScreen = 1;
+    break;
+  case 2:
+    if(count == 250){
+      redrawScreen = 1;
+    }
+    break;
+  case 3:
+    if(count == 250){
+      redrawScreen = 1;
+      count = 0;
+    }
+    break;
+  case 4:
+    if(count == 250){
+      redrawScreen = 1;
+      count = 0;
+    }
+    break;
+  }
+
+  if(count == 250){
+    count = 0;
+  }
 }
-     
+   
+*/
+
 void main(void){
   P1DIR |= LED_GREEN;
   P1OUT |= LED_GREEN;
@@ -66,11 +121,22 @@ void main(void){
 
   while(1){
     if(redrawScreen){
-      drawString5x7(10,60,"Wanna Play a Game??",COLOR_RED, COLOR_BLACK);
+      switch(switch_state){
+      case 0:
+	// redrawScreen = 0;
+	drawString5x7(10,60,"Wanna Play a Game??",COLOR_RED, COLOR_BLACK);
+	break;
+      // switch(s){
+	// case 1:
+	//state_advance();
+	//break;
+	//      case 2:
+	
     }
     P1OUT &=~LED_GREEN;
     or_sr(0x10);
     P1OUT |= LED_GREEN;
+    }
   }
 }
 

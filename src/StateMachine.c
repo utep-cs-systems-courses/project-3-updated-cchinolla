@@ -5,7 +5,7 @@
 #include "switches.h"
 #include "lcdutils.h"
 #include "lcddraw.h"
-
+#include <libTimer.h>
 
 static char dim_state = 0;
 
@@ -87,7 +87,7 @@ void state_advance(){
   led_update();
 }
 
-char dim(){
+void dim(){
 static int dim_counter = 0;
 switch(dim_counter){
 case 0:
