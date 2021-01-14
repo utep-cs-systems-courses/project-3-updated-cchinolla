@@ -8,15 +8,10 @@
 #include "lcddraw.h"
 
 
-char state;
-char SW1down;
-char SW2down;
-char SW3down;
-char SW4down;
 char switch_state;
-char switch_state_changed;
 char button = 0;
 short note;
+char s1, s2, s3, s4;
 
 
 static char switch_update_interrupt_sense(){
@@ -55,23 +50,23 @@ void switch_interrupt_handler(){
   
   if(s1){
     switch_state = 1;
-    button = 1;
-    note = 1000;
-    buzzer_set_period(note);
+    //    button = 1;
+    // note = 1000;
+    // buzzer_set_period(note);
   }else if(s2){
     switch_state = 2;
-    button = 2;
-    note = 5000;
-    buzzer_set_period(note);
+    //button = 2;
+    //note = 5000;
+    //    buzzer_set_period(note);
   }else if(s3){
     switch_state = 3;
-    button = 3;
-    note = 7000;
-    buzzer_set_period(note);
+    //button = 3;
+    //note = 7000;
+    // buzzer_set_period(note);
   }else if(s4){
     switch_state = 4;
-    button = 4;
-    note = 0;
-    buzzer_set_period(note);
+    // button = 4;
+    // note = 0;
+    //    buzzer_set_period(note);
   }
 }

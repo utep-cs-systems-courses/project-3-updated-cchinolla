@@ -1,23 +1,18 @@
 //Alternate LEDs from Off, Green, and red
 #include <msp430.h>
 #include <libTimer.h>
-#include "led.h"
-#include "buzzer.h"
 #include "lcdutils.h"
 #include "lcddraw.h"
-#include "switches.h"
+#include "led.h"
 #include "StateMachine.h"
+#include "buzzer.h"
+#include "switches.h"
 
 
-//#define LED_GREEN BIT6
 short redrawScreen = 1;
 u_int fontFgColor = COLOR_GREEN;
 long color;
-
 static int prev = 0;
-
-//void drawCircle(intxc, int yc, int x, int y){
-  // putpixel (xc+x, yc+y, RED)
 
 u_char c_width = (screenWidth/2) + 1;
 u_char c_height = (screenHeight/2) + 1;
@@ -45,9 +40,9 @@ void wdt_c_handler(){
   static int count = 0;
   static int count2 = 0;
   static int count3 = 0;
-
+  /*
   if(switch_state == 1){
-    if(++count % 5 == 0)
+    if(++count %5 == 0)
       buzzer_advance();
     if(count == 250)
 	state_advance();
@@ -59,14 +54,26 @@ void wdt_c_handler(){
     count2++;
     redrawScreen = 1;
    }
- if(switch_state == 4){
-   buzzer_advance();
+  if(switch_state == 4){
+    buzzer_advance();
     if(++count3 == 250){
       count3 == 0;
       fontFgColor = (fontFgColor == COLOR_GREEN ? COLOR_PINK : COLOR_GREEN);
       redrawScreen = 1;
       }
     }
+  */
+  count++;
+  if(count == 250 & switch_state == 0){
+    count = 0;
+  }else if(count != 250 && switch_state == 1){
+    count = 0;
+  }else if(count != 250 && switch_state == 2){
+    count = 0;
+  }else if(count != 250 && switch_state == 3){
+    count = 0;
+  }
+  
   }
 
 
@@ -124,25 +131,34 @@ void wdt_c_handler(){
    
 */
 
-void main(void){
+void main(){
+  //  led_init();
   P1DIR |= LED_GREEN;
   P1OUT |= LED_GREEN;
   configureClocks();/*setuup master oscillator, CPU & peripheeral clocks*/
   lcd_init();
-  led_init();
   switch_init();
   buzzer_init();
   enableWDTInterrupts();
-  or_sr(0x18);
+  or_sr(0x8);
 
-  clearScreen(COLOR_PURPLE);
+  clearScreen(COLOR_BLACK);
 
+  drawString5x7(15,30,"Wanna Play a Game?",COLOR_RED, COLOR_BLACK);
+
+  while(1){
+    state_advance();
+  }
+
+
+  /*
   while(1){
     if(redrawScreen){
       switch(switch_state){
       case 0:
 	// redrawScreen = 0;
-	drawString5x7(10,20,"Wanna Play a Game??",COLOR_BLACK, COLOR_BLUE);
+	drawString5x7(15,30,"Wanna Play a Game?",COLOR_RED, COLOR_BLACK);
+	//	drawShapes(COLOR_PINK, 100, 100, 10);
 	break;
       case 1:
 	if(prev == 2){
@@ -150,7 +166,6 @@ void main(void){
 	}else if(prev == 3){
 	  clearShapes(50, 50, 10);
 	}
-
 	drawShapes(COLOR_PINK, 100, 100, 10);
 	prev = 1;
 	break;
@@ -161,7 +176,7 @@ void main(void){
 	  clearShapes(50,50,10);
 	}
 	drawShapes(COLOR_YELLOW, 25, 30, 20);
-	prev = 3;
+	prev = 2;
 	break;
       case 3:
 	if(prev == 1){
@@ -176,7 +191,9 @@ void main(void){
 	if(prev == 1){
 	  clearShapes(100,100,10);
 	}else if(prev == 2){
-	  clearShapes(50, 50, 10);
+	  clearShapes(25, 30, 20);
+	}else if(prev == 3){
+	  clearShapes(50,50,10);
 	}
       }
     }
@@ -185,12 +202,12 @@ void main(void){
 	//state_advance();
 	//break;
 	//      case 2:
-	
+	*/	
 
     P1OUT &=~LED_GREEN;
     or_sr(0x10);
     P1OUT |= LED_GREEN;
-    }
+    
  
 }
 

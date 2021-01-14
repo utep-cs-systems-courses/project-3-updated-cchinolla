@@ -10,6 +10,6 @@
 void switch_init();
 void switch_interrupt_handler();
 
-extern char state, switch_state, s1, s2, s3, s4;
+extern char switch_state, s1, s2, s3, s4;
 
 #endif
