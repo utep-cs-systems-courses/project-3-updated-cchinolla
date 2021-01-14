@@ -63,5 +63,7 @@ void switch_interrupt_handler(){
   }else if(s4){
     switch_state = 4;
     button = 4;
+    note = 0;
+    buzzer_set_period(note);
   }
 }
