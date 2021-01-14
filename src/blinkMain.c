@@ -1,6 +1,6 @@
 //Alternate LEDs from Off, Green, and red
 #include <msp430.h>
-#include "libTimer.h"
+#include <libTimer.h>
 #include "led.h"
 #include "buzzer.h"
 #include "lcdutils.h"
@@ -44,6 +44,7 @@ void wdt_c_handler(){
     redrawScreen = 1;
    }
  if(switch_state == 4){
+   buzzer_advance();
     if(++count3 == 250){
       count3 == 0;
       fontFgColor = (fontFgColor == COLOR_YELLOW ? COLOR_BROWN : COLOR_GREEN);
@@ -111,6 +112,7 @@ void main(void){
   P1DIR |= LED_GREEN;
   P1OUT |= LED_GREEN;
   configureClocks();/*setuup master oscillator, CPU & peripheeral clocks*/
+  lcd_init();
   led_init();
   switch_init();
   buzzer_init();
@@ -124,8 +126,14 @@ void main(void){
       switch(switch_state){
       case 0:
 	// redrawScreen = 0;
-	drawString5x7(10,60,"Wanna Play a Game??",COLOR_RED, COLOR_BLACK);
+	drawString5x7(10,20,"Wanna Play a Game??",COLOR_BLACK, COLOR_BLUE);
 	break;
+      case 1:
+	if(prev == 2){
+	  clearShapes(25, 30, 20);
+	}else if(prev == 3){
+	  clearShapes(50, 50, 10);
+	}
       // switch(s){
 	// case 1:
 	//state_advance();
@@ -133,11 +141,12 @@ void main(void){
 	//      case 2:
 	
     }
+    }
     P1OUT &=~LED_GREEN;
     or_sr(0x10);
     P1OUT |= LED_GREEN;
     }
-  }
+ 
 }
 
  

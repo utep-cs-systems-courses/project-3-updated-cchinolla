@@ -9,6 +9,8 @@
 
 static char dim_state = 0;
 
+
+
 void drawSquare(int offc, int offr){
   for(int r = 0; r < 20; r++){
     for (int c = 0; c < 20; c++){
@@ -16,6 +18,24 @@ void drawSquare(int offc, int offr){
 }
   }
 }
+
+void drawSshapes(int COLOR, int width, int height, int center){
+  u_char c_width = screenWidth/2 +1;
+  u_char c_height = screenHeight/2 + 1;
+
+  drawDiamond(c_width - width, c_height - height, center, COLOR);
+  drawDiamond(c_width, c_height, center, COLOR_BLACK);
+}
+
+void clearShapes(int width, int height, int center){
+  u_char c_width = screenWidth/2 + 1;
+  u_char c_heigth = screenHeight/2 +1;
+
+  drawDiamond(c_width - width, c_height - height, center, COLOR_BLACK);
+  drawDiamond(c_width, c_height, center, COLOR_BLACK);
+}
+
+
 
 char toggle_green(){
   static char s = 0;
@@ -69,24 +89,101 @@ void buzzer_advance(){
   }
 }
 
-
-void state_advance(){
-  char changed = 0;
-  switch(state){
+char state1(){
+  static short curr = 0;
+  switch(curr){
   case 0:
-    changed = toggle_green();
+    red_on = 1;
+    state = 0;
+    curr = 1;
     break;
   case 1:
-    changed = toggle_red();
+    red_on = 0;
+    state = 0;
+    curr = 0;
+    break;
+  }
+  return 1;
+}
+
+char state2(){
+  static char state = 0;
+  switch(state){
+  case 0:
+    green_on = 1;
+    state = 0;
+    break;
+  case 1:
+    green_on = 0;
+    state = 0;
+    break;
+  }
+  return 1;
+}
+
+char state3(){
+  char changed = 0;
+  static enum {R=0, G=1} color = G;
+  switch(color){
+  case R:
+    changed= toggle_red();
+    color = G;
+  case G:
+    changed = toggle_green();
+    color = R;
+  }
+  changed_led = changed;
+  led_update();
+}
+
+char state4(){
+  red_on = 0;
+  changed_led = 1;
+  led_update();
+  return 1;
+}
+    
+void state_advance(){
+  char state = 0;
+  switch(state){
+  case 0:
+    state1();
+    break;
+  case 1:
+    state2();
     break;
   case 2:
-    changed = dim();
+    state3();
+    break;
+  case 3:
+    state4();
     break;
   }
   led_changed = changed;
   led_update();
 }
 
+
+/*
+void state_advance(){
+  char changed = 0;
+  static enum{R = 0, G = 1} color = G;
+  switch(color){
+  case R:
+    changed = toggle_red();
+    color = G;
+    break;
+  case G:
+    changed = toggle_green();
+    color = R;
+    break;
+  }
+  leds_changed = changed;
+  led_update();
+}
+*/
+
+/*
 void dim(){
 static int dim_counter = 0;
 switch(dim_counter){
@@ -111,7 +208,7 @@ case 3:
 }
   return 1;
 }
-
+*/
 void dim25(){
   static char dimState = 0;
   switch(dimState){
@@ -179,6 +276,10 @@ void dim75(){
     dimState = 0;
     break;
   }
-  led_changed = 1;
+  changed_led = 1;
   led_update();
+}
+
+short get_period(short freq){
+  return 2000000/freq;
 }
