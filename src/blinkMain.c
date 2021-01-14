@@ -11,17 +11,35 @@
 
 //#define LED_GREEN BIT6
 short redrawScreen = 1;
-u_int fontFgColor = COLOR_BLUE;
-long COLOR1;
-long COLOR2;
+u_int fontFgColor = COLOR_GREEN;
+long color;
 
 static int prev = 0;
 
 //void drawCircle(intxc, int yc, int x, int y){
   // putpixel (xc+x, yc+y, RED)
 
-u_char centerWidth = (screenWidth/2) + 1;
-u_char centerHeight = (screenHeight/2) + 1;
+u_char c_width = (screenWidth/2) + 1;
+u_char c_height = (screenHeight/2) + 1;
+
+void drawDiamond(u_char col, u_char row, u_char center, u_int color){
+  u_char r;
+  u_char c;
+
+  for(c = 0; c < center; c++){
+    for(r = center; r < center * 2 - c; r++){
+      drawPixel(center + col + c, row + r, color);
+      drawPixel(center + col - c, row + r, color);
+    }
+  }
+
+  for(r = 0; r < center; r++){
+    for(c = 0; c < r; c++){
+      drawPixel(center + col + c, row + r, color);
+      drawPixel(center + col - c, row + r, color);
+  }
+  }
+}
 
 void wdt_c_handler(){
   static int count = 0;
@@ -29,14 +47,12 @@ void wdt_c_handler(){
   static int count3 = 0;
 
   if(switch_state == 1){
-    if(++count % 5 == 0){
+    if(++count % 5 == 0)
       buzzer_advance();
-      if(count == 250){
+    if(count == 250)
 	state_advance();
 	count = 0;
-	}
-      }
-    }
+  }
   if(++count2 == 250){
     state_advance();
     count2 = 0;
@@ -47,7 +63,7 @@ void wdt_c_handler(){
    buzzer_advance();
     if(++count3 == 250){
       count3 == 0;
-      fontFgColor = (fontFgColor == COLOR_YELLOW ? COLOR_BROWN : COLOR_GREEN);
+      fontFgColor = (fontFgColor == COLOR_GREEN ? COLOR_PINK : COLOR_GREEN);
       redrawScreen = 1;
       }
     }
@@ -134,14 +150,43 @@ void main(void){
 	}else if(prev == 3){
 	  clearShapes(50, 50, 10);
 	}
+
+	drawShapes(COLOR_PINK, 100, 100, 10);
+	prev = 1;
+	break;
+      case 2:
+	if(prev == 1){
+	  clearShapes(100,100,10);
+	}else if(prev == 3){
+	  clearShapes(50,50,10);
+	}
+	drawShapes(COLOR_YELLOW, 25, 30, 20);
+	prev = 3;
+	break;
+      case 3:
+	if(prev == 1){
+	  clearShapes(100,100,10);
+	}else if(prev == 2){
+	  clearShapes(25,30,20);
+	}
+	drawShapes(COLOR_BLUE, 50, 50, 10);
+	prev = 3;
+	break;
+      case 4:
+	if(prev == 1){
+	  clearShapes(100,100,10);
+	}else if(prev == 2){
+	  clearShapes(50, 50, 10);
+	}
+      }
+    }
       // switch(s){
 	// case 1:
 	//state_advance();
 	//break;
 	//      case 2:
 	
-    }
-    }
+
     P1OUT &=~LED_GREEN;
     or_sr(0x10);
     P1OUT |= LED_GREEN;

@@ -19,7 +19,7 @@ void drawSquare(int offc, int offr){
   }
 }
 
-void drawSshapes(int COLOR, int width, int height, int center){
+void drawShapes(int COLOR, int width, int height, int center){
   u_char c_width = screenWidth/2 +1;
   u_char c_height = screenHeight/2 + 1;
 
@@ -29,7 +29,7 @@ void drawSshapes(int COLOR, int width, int height, int center){
 
 void clearShapes(int width, int height, int center){
   u_char c_width = screenWidth/2 + 1;
-  u_char c_heigth = screenHeight/2 +1;
+  u_char c_height = screenHeight/2 +1;
 
   drawDiamond(c_width - width, c_height - height, center, COLOR_BLACK);
   drawDiamond(c_width, c_height, center, COLOR_BLACK);
@@ -144,6 +144,7 @@ char state4(){
 }
     
 void state_advance(){
+  
   char state = 0;
   switch(state){
   case 0:
@@ -159,7 +160,7 @@ void state_advance(){
     state4();
     break;
   }
-  led_changed = changed;
+  //changed_led = changed;
   led_update();
 }
 
@@ -229,7 +230,7 @@ void dim25(){
     dimState = 0;
     break;
   }
-  led_changed = 1;
+  changed_led = 1;
   led_update();
 }
 
@@ -252,7 +253,7 @@ void dim50(){
     red_on = 1;
     dimState = 0;
   }
-  led_changed = 1;
+  changed_led = 1;
   led_update();
 }
 

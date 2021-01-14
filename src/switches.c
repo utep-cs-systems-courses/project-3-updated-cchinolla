@@ -32,10 +32,18 @@ void switch_init(){
   P2OUT |= SWITCHES;//pull-ups for switches
   P2DIR &= ~SWITCHES;//set switches bits for inpput
   switch_update_interrupt_sense();
-  switch_interrupt_handler();
+  //  switch_interrupt_handler();
   led_update();
 }
 
+/*
+void __interrupt_vec(PORT2_VECTOR) Port_2(){
+  if(P2IFG & SWITCHES){
+    P2IFG &= ~SWITCHES;
+    switch_interrupt_handler();
+  }
+}
+*/
 
 void switch_interrupt_handler(){
   char p2val = switch_update_interrupt_sense();
